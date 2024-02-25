@@ -9,21 +9,6 @@ connection = psycopg2.connect(
     password="alejandro",
 )
 
-# Obtención de un cursor
-#cursor = connection.cursor()
-
-# Ejecución de una consulta SQL
-#cursor.execute("SELECT * FROM ALUMNO")
-
-# Obtención de los resultados
-#results = cursor.fetchall()
-
-# Cerrar el cursor
-#cursor.close()
-
-# Cerrar la conexión
-#connection.close()
-
 def Conectar_BD(host, usuario, password, nombrebd):
     try:
         db = psycopg2.connect(host=host, user=usuario, password=password, database=nombrebd)
@@ -122,6 +107,7 @@ def BorrarDatos(db, asignatura):
                                     FROM ASIGNATURA
                                     WHERE Nombre = '%s')'''
     
+    #Borra de la tabla ASIGNATURA_TITULACION
     sql2 = '''DELETE FROM ASIGNATURA_TITULACION
             WHERE ID_ASIGNATURA = (SELECT ID_ASIGNATURA
                                     FROM ASIGNATURA
