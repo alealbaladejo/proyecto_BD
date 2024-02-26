@@ -18,13 +18,15 @@ def Listar_Asignaturas(db):
     SELECT Nombre AS ASIGNATURA, COUNT(AA.ID_ASIGNATURA) AS ALUMNOS
     FROM ASIGNATURA_ALUMNO AA, ASIGNATURA A
     WHERE AA.ID_ASIGNATURA = A.ID_ASIGNATURA
-    GROUP BY AA.ID_ASIGNATURA    
+    GROUP BY AA.ID_ASIGNATURA, ASIGNATURA    
     '''
     try:
         cursor.execute(sql)
         registros = cursor.fetchall()
+        print("{:<20} {:<10}".format("ASIGNATURA", "ALUMNOS"))
+        print("-" * 30)
         for registro in registros:
-            print("ASIGNATURA: ",registro["ASIGNATURA"]," ALUMNOS: ",registro["ALUMNOS"])
+            print("{:<25} {:<10}".format(registro["ASIGNATURA"], registro["ALUMNOS"]))
     except MySQLdb.Error as e:
         print("Error en la consulta:", e)
 
@@ -41,8 +43,10 @@ def Sueldo_Profes(db):
     try:
         cursor.execute(sql)
         registros = cursor.fetchall()
+        print ("Nombre Profesor")
+        print("-"*30)
         for registro in registros:
-            print("Nombre: ",registro[0])
+            print(registro[0])
     except MySQLdb.Error as e:
         print("Error en la consulta:", e)
     if cursor.rowcount == 0:
@@ -65,8 +69,11 @@ def Alumnos_Asignatura(db):
 
         if len(registros)==0:
             print("No hay datos para mostrar.")
-        for registro in registros:
-            print (registro[0])
+        if len(registros) > 0:
+            print("Alumnos Aprobados")
+            print("-"*30)
+            for registro in registros:
+                print (registro[0])
     except Exception as e:
         print("Error en la consulta", e)    
 
@@ -97,19 +104,33 @@ def Nuevo_Alumno(db, ALUMNO):
 def BorrarDatos(db,asignatura):
     cursor=db.cursor()
 
-    #Borra de la tabla asignatura_alumno
-    sql = '''DELETE FROM ASIGNATURA_ALUMNO
+
+    sql1 = '''DELETE FROM DEPARTAMENTO_ASIGNATURA
             WHERE ID_ASIGNATURA = (SELECT ID_ASIGNATURA
                                     FROM ASIGNATURA
                                     WHERE Nombre = '%s')'''
     
-    #Borra de la tabla asignatura
-    sql2 = '''
+
+    sql2 = '''DELETE FROM ASIGNATURA_TITULACION
+            WHERE ID_ASIGNATURA = (SELECT ID_ASIGNATURA
+                                    FROM ASIGNATURA
+                                    WHERE Nombre = '%s')'''
+
+
+
+    sql3 = '''DELETE FROM ASIGNATURA_ALUMNO
+            WHERE ID_ASIGNATURA = (SELECT ID_ASIGNATURA
+                                    FROM ASIGNATURA
+                                    WHERE Nombre = '%s')'''
+    
+    sql4 = '''
             DELETE FROM ASIGNATURA
             WHERE Nombre = '%s' '''
     try:
-        cursor.execute(sql % asignatura)
+        cursor.execute(sql1 % asignatura)
         cursor.execute (sql2 % asignatura)
+        cursor.execute(sql3 % asignatura)
+        cursor.execute(sql4 % asignatura)
         print("Datos borrados.")
         db.commit()
     except Exception as e:
