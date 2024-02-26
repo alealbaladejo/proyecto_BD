@@ -26,13 +26,15 @@ def Listar_Asignaturas(db):
     SELECT A.Nombre AS ASIGNATURA, COUNT(AA.ID_ASIGNATURA) AS ALUMNOS
     FROM ASIGNATURA_ALUMNO AA, ASIGNATURA A
     WHERE AA.ID_ASIGNATURA = A.ID_ASIGNATURA
-    GROUP BY A.Nombre
+    GROUP BY A.NOMBRE
     '''
     try: 
         cursor.execute(sql)
         resultado = cursor.fetchall()
+        print("\n{:<27}{:10}".format("ASIGNATURA","ALUMNOS"))
+        print ("-"*35)
         for registro in resultado:
-            print("ASIGNATURA: ", registro[0], " ALUMNOS: ", registro[1])
+            print("{:<22}{:10}".format(registro[0],registro[1]))
     except Exception as e:
         print("Error en la consulta. ", e)
 
@@ -49,8 +51,10 @@ def Sueldo_Profes(db):
     try: 
         cursor.execute (sql,(sueldominimo,sueldomaximo))
         registros = cursor.fetchall()
+        print("Nombre")
+        print("-"*30)
         for registro in registros:
-            print(f"Nombre: {registro[0]}")
+            print(registro[0])
     except KeyError as e:
         print("Error en la consulta.",e)
     if cursor.rowcount == 0:
@@ -72,8 +76,11 @@ def Alumnos_Asignatura (db):
         registros = cursor.fetchall()
         if len(registros) == 0:
             print("No hay datos para mostrar.")
-        for registro in registros:
-            print(registro[0])
+        if len(registros) > 0:
+            print("Nombre")
+            print("-"*30)
+            for registro in registros:
+                print(registro[0])
     except Exception as e:
         print("Error en la consulta",e)
     
