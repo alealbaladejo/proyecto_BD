@@ -110,28 +110,36 @@ def Nuevo_Alumno(db, ALUMNO):
         db.rollback()
 def BorrarDatos(db, asignatura):
     cursor = db.cursor()
-    
-    # Borra de la tabla Departamento_Asignatura
-    sql1 = '''DELETE FROM DEPARTAMENTO_ASIGNATURA
+
+    # Borra de la tabla asignatura_alumno
+    sql1 = '''DELETE FROM ASIGNATURA_ALUMNO
               WHERE ID_ASIGNATURA = (SELECT ID_ASIGNATURA
                                       FROM ASIGNATURA
                                       WHERE Nombre = :asig)'''
 
-    # Borra de la tabla ASIGNATURA_TITULACION
     sql2 = '''DELETE FROM ASIGNATURA_TITULACION
               WHERE ID_ASIGNATURA = (SELECT ID_ASIGNATURA
                                       FROM ASIGNATURA
                                       WHERE Nombre = :asig)'''
+        
 
-    # Borra de la tabla asignatura_alumno
-    sql3 = '''DELETE FROM ASIGNATURA_ALUMNO
+    sql3 = '''DELETE FROM DEPARTAMENTO_ASIGNATURA
+              WHERE ID_ASIGNATURA = (SELECT ID_ASIGNATURA
+                                      FROM ASIGNATURA
+                                      WHERE Nombre = :asig)'''
+    sql4 = '''DELETE FROM ASIGNATURA
               WHERE ID_ASIGNATURA = (SELECT ID_ASIGNATURA
                                       FROM ASIGNATURA
                                       WHERE Nombre = :asig)'''
 
     # Borra de la tabla asignatura
-    sql4 = '''DELETE FROM ASIGNATURA
-              WHERE Nombre = :asig'''
+    #sql4 = '''DELETE FROM ASIGNATURA
+    #          WHERE Nombre = :asig'''
+
+
+
+
+
 
     try:
         cursor.execute(sql1, asig=asignatura)
@@ -143,7 +151,6 @@ def BorrarDatos(db, asignatura):
     except Exception as e:
         print("Error al borrar datos.", e)
         db.rollback()
-
 
 def AumentoSueldo (db):
         cursor = db.cursor()
